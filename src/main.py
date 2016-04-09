@@ -4,12 +4,12 @@ Created on Apr 5, 2016
 @author: zhi
 '''
 from __future__ import absolute_import, division, print_function
-from nltk.corpus import cmudict
+import nltk
 import re
 
 
 def main():
-    pronDict = cmudict.dict()
+    pronDict = nltk.corpus.cmudict.dict()
     reg = re.compile('[^a-zA-Z\']')
     s = raw_input("Enter a string to analyze: ")
     meterstress = ""
