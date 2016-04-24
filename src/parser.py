@@ -6,11 +6,13 @@ def get_text(url):
     if r.status_code == 404:
         raise ValueError("Invalid URL.")
     soup = BeautifulSoup(r.text, "html.parser")
-    poem = soup.find(id="poem").getText()
-    # poem_text = str(poem.get_text('\n'))
-    poem_raw = poem.split('\n')
+    poem = soup.find(id="poem")
+    if poem is None:
+        poem = soup.find(class_="poem")
+    poem = poem.get_text('\n')
+    poem = poem.split('\n')
     line_list = []
-    for x in poem_raw:
+    for x in poem:
         x = str(x.encode('ascii', 'ignore')).strip()
         if x.startswith('Source:'):
             break
@@ -19,8 +21,7 @@ def get_text(url):
 
 
 def main():
-    get_text("http://www.poetryfoundation.org/poetrymagazine/poem/252146")
-
+    pass
 
 if __name__ == "__main__":
-    main()
+    get_text("http://www.poetryfoundation.org/poems-and-poets/poems/detail/89189")
