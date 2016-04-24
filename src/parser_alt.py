@@ -10,7 +10,6 @@ def get_text(url):
     soup = BeautifulSoup(r.text, "html.parser")
     poem_contents = soup.find_all(property="content:encoded")
     poem = poem_contents[0].get_text('\n')
-    print poem
     poem_raw = poem.split('\n')
     line_list = []
     for x in poem_raw:
@@ -19,12 +18,11 @@ def get_text(url):
     for x in line_list:
         if x == "":
             line_list.remove(x)
-    print line_list
     return line_list
 
 
 def main():
-    get_text("https://www.poets.org/poetsorg/poem/do-not-go-gentle-good-night")
+    get_text("https://www.poets.org/poetsorg/poem/sun-bemidji-minnesota")
 
 
 if __name__ == "__main__":
