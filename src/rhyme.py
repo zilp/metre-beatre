@@ -1,19 +1,9 @@
-
-'''
-Created on Apr 14, 2016
-@author: Donna
-'''
-
 from __future__ import absolute_import, print_function
 import string
 import re
 import nltk
 
-def alliteration(text):
-    vowels = [u'AO',u'AA',u'IY',u'UW',u'EH',u'IH',u'UH',u'AH',u'AX',u'AE',\
-              u'EY',u'AY',u'OW',u'AW',u'OY',u'ER',u'AXR',u'EH R',u'UH R',\
-              u'AO R',u'AA R',u'IH R',u'IY R',u'AW R']
-    extras = ['a', 'an', 'the', 'that', 'those', 'these', 'and']
+def rhyme(text):
     pronDict = nltk.corpus.cmudict.dict()
     alliteration_by_line = []
     try:
@@ -60,4 +50,4 @@ def alliteration(text):
         poem.close()
 
 if __name__ == '__main__':
-    alliteration('Millay Sonnet 42.txt')
+    rhyme('Millay Sonnet 42.txt')
