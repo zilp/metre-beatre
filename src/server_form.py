@@ -28,7 +28,7 @@ display_text = '''
 				<input type="text" name="poem"/> <br/>
 				<input type="submit" value="Send"/>
 			</form>
-			translated text:<br/>%s
+			 facts about poem:<br/>%s
 		</body>
 	</html>
 	'''
