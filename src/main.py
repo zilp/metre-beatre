@@ -183,9 +183,11 @@ def analyzeMeter(poem):
         currentMeter = 0
         twoSyCount = 0
         threeSyCount = 0
-        for w in s.split():
-            w = re.sub(reg, "", w)
-            w = w.lower()
+        line_lowercase = s.lower()
+        line_no_dash = re.sub(r'[\'\,]', "", line_lowercase)
+        line_no_punc = re.sub(r'[^a-zA-Z\s]', " ", line_no_dash)  # remove all commas and other punctuation
+        word_list = line_no_punc.split()
+        for w in word_list:
             if w in pronDict:
                 pronparse = pronDict[w]
                 if len(pronparse) == 1:
