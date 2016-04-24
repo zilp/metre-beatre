@@ -175,7 +175,7 @@ def analyzeMeter(poem):
     pronDict = nltk.corpus.cmudict.dict()
     type = {"iamb": 0, "trochee": 0,
             "anapest": 0, "dactyl": 0, "amphibrach": 0}
-    meterlength = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+    meterlength = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
     sumvalue = 0
     reg = re.compile('[^a-zA-Z\']')
     for s in poem:
@@ -252,7 +252,7 @@ def analyzeMeter(poem):
                 sumvalue += 1 * len(found_meter)
         meterstress = simpleCleanup(meterstress)
         print(meterstress)
-        if currentMeter < 16:
+        if currentMeter < 17:
             meterlength[currentMeter] += 1
 
     best_fit = ""
@@ -289,6 +289,6 @@ def analyzeMeter(poem):
 
 
 if __name__ == "__main__":
-    poem = open('monarch.txt', 'r')
+    poem = open('raven.txt', 'r')
     raw_lines = poem.readlines()
     analyzeMeter(raw_lines)
