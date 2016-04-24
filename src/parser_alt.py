@@ -1,5 +1,7 @@
 from bs4 import BeautifulSoup
 import requests
+import re
+
 
 def get_text(url):
     r = requests.get(url)
@@ -7,8 +9,9 @@ def get_text(url):
         raise ValueError("Invalid URL.")
     soup = BeautifulSoup(r.text, "html.parser")
     poem = soup.find_all(class_="field-item even")
-    poem = poem[3].getText()
-    # poem_text = str(poem.get_text('\n'))
+    poem = str(poem[3])
+    poem = poem.replace('<br/>', '\n')
+    poem = re.sub('<[^<]+?>', '', poem)
     poem_raw = poem.split('\n')
     line_list = []
     for x in poem_raw:
@@ -17,7 +20,9 @@ def get_text(url):
             break
         line_list.append(x)
     for x in line_list:
-        print x
+        if x == "":
+            line_list.remove(x)
+    print line_list
     return line_list
 
 
