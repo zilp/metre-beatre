@@ -126,30 +126,6 @@ def trocheeEstimate(syllable, place, value):
     return result
 
 
-def spondeeEstimate(syllable, place, value):
-    result = 0
-    for l in syllable:
-        if place == 0 and l == "1":
-            place = 1
-            result += value
-        elif place == 1 and l == "1":
-            place = 0
-            result += value
-    return result
-
-
-def pyrrhicEstimate(syllable, place, value):
-    result = 0
-    for l in syllable:
-        if place == 0 and l == "0":
-            place = 1
-            result += value
-        elif place == 1 and l == "0":
-            place = 0
-            result += value
-    return result
-
-
 def anapestEstimate(syllable, place, value):
     result = 0
     for l in syllable:
@@ -197,7 +173,7 @@ def amphibrachEstimate(syllable, place, value):
 
 def analyzeMeter(poem):
     pronDict = nltk.corpus.cmudict.dict()
-    type = {"iamb": 0, "trochee": 0, "spondee": 0, "pyrrhic": 0,
+    type = {"iamb": 0, "trochee": 0,
             "anapest": 0, "dactyl": 0, "amphibrach": 0}
     meterlength = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
     sumvalue = 0
@@ -266,13 +242,9 @@ def analyzeMeter(poem):
                 meterstress += found_meter
                 type["iamb"] += iambEstimate(found_meter, twoSyCount, 1)
                 type["trochee"] += trocheeEstimate(found_meter, twoSyCount, 1)
-                type["spondee"] += spondeeEstimate(found_meter, twoSyCount, 1)
-                type["pyrrhic"] += pyrrhicEstimate(found_meter, twoSyCount, 1)
                 type["anapest"] += anapestEstimate(found_meter, threeSyCount, 1)
                 type["dactyl"] += dactylEstimate(found_meter, threeSyCount, 1)
-                type[
-                    "amphibrach"] += amphibrachEstimate(found_meter, 
-                                                        threeSyCount, 1)
+                type["amphibrach"] += amphibrachEstimate(found_meter, threeSyCount, 1)
                 twoSyCount = (twoSyCount + len(found_meter)) % 2
                 threeSyCount = (threeSyCount + len(found_meter)) % 3
                 sumvalue += 1 * len(found_meter)
