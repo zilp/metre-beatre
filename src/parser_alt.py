@@ -3,7 +3,7 @@ import requests
 import re
 
 
-def get_text(url):
+def get_text_alt(url):
     r = requests.get(url)
     if r.status_code == 404:
         raise ValueError("Invalid URL.")
