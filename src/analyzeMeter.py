@@ -318,19 +318,30 @@ def printPoemStress(poem, meter):
             if w == "a" or w == "i" or w == "o" or w == "u" or w == "y":
                 if not following:
                     result.append(printMap[count % beat])
-                    new = False
                     following = True
+                    new = False
                     count += 1
                 else:
                     result.append(" ")
-            elif w == "e" and new:
-                result.append(printMap[count % beat])
-                following = True
-                count += 1
+            elif w == "e":
+                if new:
+                    result.append(printMap[count % beat])
+                    following = True
+                    new = False
+                    count += 1
+                elif not line[i+1].isalpha():
+                    result.append(" ")
+                elif (line[i+1] == "d" or line[i+1] == "s") and not line[i+2].isalpha() and line[i-1] != "l":
+                    result.append(" ")
+                else:
+                    result.append(printMap[count % beat])
+                    following = True
+                    new = False
+                    count += 1
             elif w == " ":
-                result.append(" ")
                 new = True
                 following = False
+                result.append(" ")
             else:
                 result.append(" ")
                 following = False
