@@ -13,6 +13,8 @@ def main(url):
         poem = parser_alt.get_text_alt(url)
     elif "poetryfoundation" in url:
         poem = parser.get_text(url)
+    else:
+        return "Invalid input."
     return analyzeMeter.analyzeMeter(poem)
 
 if __name__ == '__main__':
