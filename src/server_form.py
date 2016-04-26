@@ -1,3 +1,9 @@
+'''
+Created on Apr. 24, 2016
+
+@author: shilpa
+'''
+
 #!/usr/bin/python
 from BaseHTTPServer import BaseHTTPRequestHandler,HTTPServer
 from os import curdir, sep
@@ -28,7 +34,7 @@ display_text = '''
 				<input type="text" name="poem"/> <br/>
 				<input type="submit" value="Send"/>
 			</form>
-			 facts about poem:<br/>%s
+			 meter of poem (best guess):<br/>%s
 		</body>
 	</html>
 	'''

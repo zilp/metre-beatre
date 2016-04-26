@@ -14,6 +14,7 @@ from nltk.metrics.distance import edit_distance
 def num_syllables(word):
     diphthongs = ['ou', 'ie', 'igh', 'oi', 'oy', 'oo', 'ea', 'ee', 'ai',
                   'ure', 'ough']
+
     vowels = ['a', 'e', 'i', 'o', 'u']
     exceptions = ['quo', 'qua', 'qui', 'que']
     syllables = 0
@@ -43,6 +44,7 @@ def split_syllables(word):
 def find_meter(word):
     diphthongs = ['ou', 'ie', 'igh', 'oi', 'oy', 'oo', 'ea', 'ee', 'ai',
                   'ure', 'ough']
+
     vowels = ['a', 'e', 'i', 'o', 'u']
     exceptions = ['quo', 'qua', 'qui', 'que']
     result = ""
@@ -81,7 +83,8 @@ def find_closest_word(word):
     return find_closest_word_with_regex(regex)
 
 
-def finish_meter(unknown_word, pronDict=nltk.corpus.cmudict.dict()):
+
+def finish_meter(unknown_word, pronDict = nltk.corpus.cmudict.dict()):
 
     found_word = find_closest_word(unknown_word)
     unknown_word_syllables = num_syllables(unknown_word)
@@ -197,6 +200,7 @@ def analyzeMeter(poem):
     two strings, where first string is the meter type and second is the length
     of the foot. '''
     pronDict = nltk.corpus.cmudict.dict()
+    # set up datatype for recording information
     type = {"iamb": 0, "trochee": 0,
             "anapest": 0, "dactyl": 0, "amphibrach": 0}
     meterlength = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
@@ -207,24 +211,27 @@ def analyzeMeter(poem):
         currentMeter = 0
         twoSyCount = 0
         threeSyCount = 0
+        # filter and format line
         line_lowercase = s.lower()
         line_no_dash = re.sub(r'[\'\,]', "", line_lowercase)
-        # remove all commas and other punctuation
         line_no_punc = re.sub(r'[^a-zA-Z\s]', " ", line_no_dash)
         word_list = line_no_punc.split()
         for w in word_list:
             if w in pronDict:
                 pronparse = pronDict[w]
                 if len(pronparse) == 1:
+                    # case of cmudict have one pronounciation
                     temp = retreiveStressPattern(pronparse[0])
                     meterstress += temp
                     if len(temp) == 1:
+                        #less weight for single syllables
                         type["iamb"] += 2
                         type["trochee"] += 2
                         type["anapest"] += 2
                         type["dactyl"] += 2
                         type["amphibrach"] += 2
                     else:
+                        # increment record by likeliness value for each meter
                         type["iamb"] += iambEstimate(temp, twoSyCount, 4)
                         type["trochee"] += trocheeEstimate(temp, twoSyCount, 4)
                         type["anapest"] += anapestEstimate(temp,
@@ -236,7 +243,7 @@ def analyzeMeter(poem):
                     sumvalue += 4 * len(temp)
                     currentMeter += len(temp)
                 else:
-                    # need to figure out what to do for multi pronouncations
+                    # case for multiple pronouncations
                     meterstress += '('
                     count = 1
                     for word in pronparse:
@@ -260,7 +267,7 @@ def analyzeMeter(poem):
                     sumvalue += 1 * len(temp)
                     currentMeter += len(temp)
             else:
-                # need to figure out if word is not in cmudict
+                # case: if word is not in cmudict
                 print("Can't find", w)
                 found_meter = finish_meter(w)
                 print(found_meter)
@@ -282,6 +289,7 @@ def analyzeMeter(poem):
     best_fit = ""
     temp_max = 0
     beat = 2
+    # figure out meter type and length from recorded information
     if(type["iamb"] > temp_max):
         temp_max = type["iamb"]
         best_fit = "iambic"
@@ -319,6 +327,7 @@ def analyzeMeter(poem):
 def printPoemStress(poem, meter):
     result = []
     index = 0
+    printmap = []
     if meter == "iambic":
         printMap = ["U", "/"]
         beat = 2
@@ -330,10 +339,10 @@ def printPoemStress(poem, meter):
         beat = 3
     elif meter == "anapestic":
         printMap = ["U", "U", "/"]
-        beat = 4
+        beat = 3
     elif meter == "amphibrachic":
         printMap = ["U", "/", "U"]
-        beat = 5
+        beat = 3
     for line in poem:
         line = line.lower()
         count = 0
@@ -342,6 +351,7 @@ def printPoemStress(poem, meter):
         result.append(line)
         for i in range(len(line)):
             w = line[i]
+            # assume all vowels minus e and plus y are a syllable if not chained
             if w == "a" or w == "i" or w == "o" or w == "u" or w == "y":
                 if not following:
                     result.append(printMap[count % beat])
@@ -350,6 +360,7 @@ def printPoemStress(poem, meter):
                     count += 1
                 else:
                     result.append(" ")
+            # handle majority of silent e cases
             elif w == "e":
                 if new:
                     result.append(printMap[count % beat])
@@ -358,17 +369,20 @@ def printPoemStress(poem, meter):
                     count += 1
                 elif not line[i + 1].isalpha():
                     result.append(" ")
-                elif (line[i + 1] == "d" or line[i + 1] == "s") and not line[i + 2].isalpha() and line[i - 1] != "l":
+                elif (line[i + 1] == "d" or line[i + 1] == "s") \
+                        and not line[i + 2].isalpha() and line[i - 1] != "l":
                     result.append(" ")
                 else:
                     result.append(printMap[count % beat])
                     following = True
                     new = False
                     count += 1
+            # reset for new word
             elif w == " ":
                 new = True
                 following = False
                 result.append(" ")
+            # print space for any non vowels
             else:
                 result.append(" ")
                 following = False
@@ -377,8 +391,10 @@ def printPoemStress(poem, meter):
     return "".join(result)
 
 
-poem = open('Shelley Witch of Atlas.txt', 'r')
+'''
+poem = open('Destruction of Sennacherib.txt', 'r')
 raw_lines = poem.readlines()
 meter = analyzeMeter(raw_lines)
-result = printPoemStress(raw_lines, meter)
+result = printPoemStress(raw_lines, meter[0])
 print(result)
+'''
