@@ -11,7 +11,7 @@ from nltk.metrics.distance import edit_distance
 
 
 def num_syllables(word):
-    diphthongs = ['ou', 'ie', 'igh', 'oi', 'oy', 'oo', 'ea', 'ee', 'ai', 
+    diphthongs = ['ou', 'ie', 'igh', 'oi', 'oy', 'oo', 'ea', 'ee', 'ai',
               'ure', 'ough']
     vowels = ['a', 'e', 'i', 'o', 'u']
     exceptions = ['quo', 'qua', 'qui', 'que']
@@ -40,7 +40,7 @@ def split_syllables(word):
 
 
 def find_meter(word):
-    diphthongs = ['ou', 'ie', 'igh', 'oi', 'oy', 'oo', 'ea', 'ee', 'ai', 
+    diphthongs = ['ou', 'ie', 'igh', 'oi', 'oy', 'oo', 'ea', 'ee', 'ai',
               'ure', 'ough']
     vowels = ['a', 'e', 'i', 'o', 'u']
     exceptions = ['quo', 'qua', 'qui', 'que']
@@ -63,8 +63,8 @@ def find_closest_word_with_regex(regex, list=nltk.corpus.cmudict.dict().keys()):
         if result is not None:
             return e
         else:
-            continue 
-        
+            continue
+
 
 def remove_affixes(word):
     stemmer = SnowballStemmer("english")
@@ -80,10 +80,10 @@ def find_closest_word(word):
 
 
 def finish_meter(unknown_word, pronDict = nltk.corpus.cmudict.dict()):
-    
+
     found_word = find_closest_word(unknown_word)
     unknown_word_syllables = num_syllables(unknown_word)
-    
+
     if found_word is None:
         return find_meter(unknown_word)
     else:
@@ -277,7 +277,7 @@ def analyzeMeter(poem):
         best_fit = "amphibrachic"
         beat = 3
 
-    lengthtype = ["monometer", "dimeter", "trimeter", "tetrameter", 
+    lengthtype = ["monometer", "dimeter", "trimeter", "tetrameter",
                   "pentameter", "hexameter", "heptameter", "octameter"]
     print("Likelyhood to be iamb is", type["iamb"] / sumvalue)
     print("Likelyhood to be trochee is", type["trochee"] / sumvalue)
@@ -350,8 +350,8 @@ def printPoemStress(poem, meter):
     return "".join(result)
 
 
-poem = open('Shelley Witch of Atlas.txt', 'r')
-raw_lines = poem.readlines()
-meter = analyzeMeter(raw_lines)
-result = printPoemStress(raw_lines, meter)
-print(result)
+# poem = open('Shelley Witch of Atlas.txt', 'r')
+# raw_lines = poem.readlines()
+# meter = analyzeMeter(raw_lines)
+# result = printPoemStress(raw_lines, meter)
+# print(result)
