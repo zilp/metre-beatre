@@ -19,34 +19,29 @@ def rhyme(poem):
     rhyme_scheme = [] # list of the rhymes in the poem in ABBA format
 
 
-    try:
-        for line in poem:
-            line_lowercase = line.lower()
-            line_no_punc = re.sub(r'[^a-zA-Z\s]', '', line_lowercase)  # remove all commas and other punctuation
-            word_list = line_no_punc.split()
-            final_word = word_list[-1]
-            if final_word in pronDict:
-                pron = pronDict[final_word][0] # if multiple pronunciations, pick the second one
+    for line in poem:
+        line_lowercase = line.lower()
+        line_no_punc = re.sub(r'[^a-zA-Z\s]', '', line_lowercase)  # remove all commas and other punctuation
+        word_list = line_no_punc.split()
+        final_word = word_list[-1]
+        if final_word in pronDict:
+            pron = pronDict[final_word][0] # if multiple pronunciations, pick the second one
 
-                # extract final syllable: vowel plus optional consonant
-                pron.reverse()
-                for i, sound in enumerate(pron):
-                    sound = re.sub(r'\d', "", sound) # remove the nuumeric stress markers
-                    if sound in vowels:
-                        if i is 0:
-                            final_syllable_list.append(str(sound))
-                        else:
-                            cons = pron[i-1]
-                            final_syllable_list.append(str(sound) + str(cons))
-                        break
+            # extract final syllable: vowel plus optional consonant
+            pron.reverse()
+            for i, sound in enumerate(pron):
+                sound = re.sub(r'\d', "", sound) # remove the nuumeric stress markers
+                if sound in vowels:
+                    if i is 0:
+                        final_syllable_list.append(str(sound))
+                    else:
+                        cons = pron[i-1]
+                        final_syllable_list.append(str(sound) + str(cons))
+                    break
 
-            else:
-                return "Following word not in dictionary: {}".format(final_word)
+        else:
+            return "Following word not in dictionary: {}".format(final_word)
 
-    except IOError:
-        return "File not found."
-    finally:
-        poem.close()
 
     print("Final syllable list is {}".format(final_syllable_list))
 
