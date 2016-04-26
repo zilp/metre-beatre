@@ -3,6 +3,7 @@ Created on Apr 5, 2016
 
 @author: zhi
 '''
+
 from __future__ import absolute_import, division, print_function
 import nltk
 import re
@@ -11,8 +12,8 @@ from nltk.metrics.distance import edit_distance
 
 
 def num_syllables(word):
-    diphthongs = ['ou', 'ie', 'igh', 'oi', 'oy', 'oo', 'ea', 'ee', 'ai', 
-              'ure', 'ough']
+    diphthongs = ['ou', 'ie', 'igh', 'oi', 'oy', 'oo', 'ea', 'ee', 'ai',
+                  'ure', 'ough']
     vowels = ['a', 'e', 'i', 'o', 'u']
     exceptions = ['quo', 'qua', 'qui', 'que']
     syllables = 0
@@ -23,10 +24,10 @@ def num_syllables(word):
     for letter in word:
         if letter in vowels:
             syllables += 1
-    #take out count for final, silent 'e'
+    # take out count for final, silent 'e'
     if word[-1] is 'e':
         syllables -= 1
-    #take out count for suffix 'ed'
+    # take out count for suffix 'ed'
     if re.search(r'ed$|qu(a|e|i|o)', word) is not None:
         syllables -= 1
     return syllables
@@ -35,13 +36,13 @@ def num_syllables(word):
 def split_syllables(word):
     regex = re.compile(r'(ou)|(ie)|(igh)|(oi)|(oy)|(oo)|(ea)|(ee)|(ai)|(ure)|\
         (ough)|(a)|(e)|(i)|(o)|(u)|(quo)')
-    raw_split = re.split(regex, word) # has None as several elements
+    raw_split = re.split(regex, word)  # has None as several elements
     return [x for x in raw_split if x is not None and x is not '']
 
 
 def find_meter(word):
-    diphthongs = ['ou', 'ie', 'igh', 'oi', 'oy', 'oo', 'ea', 'ee', 'ai', 
-              'ure', 'ough']
+    diphthongs = ['ou', 'ie', 'igh', 'oi', 'oy', 'oo', 'ea', 'ee', 'ai',
+                  'ure', 'ough']
     vowels = ['a', 'e', 'i', 'o', 'u']
     exceptions = ['quo', 'qua', 'qui', 'que']
     result = ""
@@ -57,14 +58,15 @@ def find_meter(word):
             result += "1"
     return result
 
+
 def find_closest_word_with_regex(regex, list=nltk.corpus.cmudict.dict().keys()):
     for e in list:
         result = re.search(regex, e)
         if result is not None:
             return e
         else:
-            continue 
-        
+            continue
+
 
 def remove_affixes(word):
     stemmer = SnowballStemmer("english")
@@ -79,17 +81,18 @@ def find_closest_word(word):
     return find_closest_word_with_regex(regex)
 
 
-def finish_meter(unknown_word, pronDict = nltk.corpus.cmudict.dict()):
-    
+def finish_meter(unknown_word, pronDict=nltk.corpus.cmudict.dict()):
+
     found_word = find_closest_word(unknown_word)
     unknown_word_syllables = num_syllables(unknown_word)
-    
+
     if found_word is None:
         return find_meter(unknown_word)
     else:
         found_word_pron = pronDict[found_word]
         found_word_pron_list = "".join(found_word_pron[0])
-        found_word_raw_stress = "".join(re.findall(r'\d+', found_word_pron_list))
+        found_word_raw_stress = "".join(
+            re.findall(r'\d+', found_word_pron_list))
         found_word_stress = re.sub("2", "1", found_word_raw_stress)
         return found_word_stress
 
@@ -103,6 +106,8 @@ def simpleCleanup(s):
 
 
 def iambEstimate(syllable, place, value):
+    ''' Match stress syllable against iambic pattern (01010101...)
+        and return a value based on how well they match'''
     result = 0
     for l in syllable:
         if place == 0 and l == "0":
@@ -115,6 +120,8 @@ def iambEstimate(syllable, place, value):
 
 
 def trocheeEstimate(syllable, place, value):
+    ''' Match stress syllable against trochaic pattern (10101010...)
+        and return a value based on how well they match'''
     result = 0
     for l in syllable:
         if place == 0 and l == "1":
@@ -127,6 +134,8 @@ def trocheeEstimate(syllable, place, value):
 
 
 def anapestEstimate(syllable, place, value):
+    ''' Match stress syllable against anapestic pattern (001001...)
+        and return a value based on how well they match'''
     result = 0
     for l in syllable:
         if place == 0 and l == "0":
@@ -142,6 +151,8 @@ def anapestEstimate(syllable, place, value):
 
 
 def dactylEstimate(syllable, place, value):
+    ''' Match stress syllable against dactylic pattern (100100...)
+        and return a value based on how well they match'''
     result = 0
     for l in syllable:
         if place == 0 and l == "1":
@@ -157,6 +168,8 @@ def dactylEstimate(syllable, place, value):
 
 
 def amphibrachEstimate(syllable, place, value):
+    ''' Match stress syllable against amphibrachic pattern (010010...)
+        and return a value based on how well they match'''
     result = 0
     for l in syllable:
         if place == 0 and l == "0":
@@ -171,7 +184,18 @@ def amphibrachEstimate(syllable, place, value):
     return result
 
 
+def retreiveStressPattern(word):
+    ''' Take in cmuDict pronounciation and return the stress pattern'''
+    teststr = "".join(word)
+    temp = "".join(re.findall(r'\d+', teststr))
+    temp = re.sub("2", "1", temp)
+    return temp
+
+
 def analyzeMeter(poem):
+    ''' Takes in a list of lines representing a poem and returns a list of
+    two strings, where first string is the meter type and second is the length
+    of the foot. '''
     pronDict = nltk.corpus.cmudict.dict()
     type = {"iamb": 0, "trochee": 0,
             "anapest": 0, "dactyl": 0, "amphibrach": 0}
@@ -185,15 +209,14 @@ def analyzeMeter(poem):
         threeSyCount = 0
         line_lowercase = s.lower()
         line_no_dash = re.sub(r'[\'\,]', "", line_lowercase)
-        line_no_punc = re.sub(r'[^a-zA-Z\s]', " ", line_no_dash)  # remove all commas and other punctuation
+        # remove all commas and other punctuation
+        line_no_punc = re.sub(r'[^a-zA-Z\s]', " ", line_no_dash)
         word_list = line_no_punc.split()
         for w in word_list:
             if w in pronDict:
                 pronparse = pronDict[w]
                 if len(pronparse) == 1:
-                    teststr = "".join(pronparse[0])
-                    temp = "".join(re.findall(r'\d+', teststr))
-                    temp = re.sub("2", "1", temp)
+                    temp = retreiveStressPattern(pronparse[0])
                     meterstress += temp
                     if len(temp) == 1:
                         type["iamb"] += 2
@@ -204,7 +227,8 @@ def analyzeMeter(poem):
                     else:
                         type["iamb"] += iambEstimate(temp, twoSyCount, 4)
                         type["trochee"] += trocheeEstimate(temp, twoSyCount, 4)
-                        type["anapest"] += anapestEstimate(temp, threeSyCount, 4)
+                        type["anapest"] += anapestEstimate(temp,
+                                                           threeSyCount, 4)
                         type["dactyl"] += dactylEstimate(temp, threeSyCount, 4)
                         type["amphibrach"] += amphibrachEstimate(temp, threeSyCount, 4)
                     twoSyCount = (twoSyCount + len(temp)) % 2
@@ -216,12 +240,11 @@ def analyzeMeter(poem):
                     meterstress += '('
                     count = 1
                     for word in pronparse:
-                        teststr = "".join(word)
-                        temp = "".join(re.findall(r'\d+', teststr))
-                        temp = re.sub("2", "1", temp)
+                        temp = retreiveStressPattern(word)
                         type["iamb"] += iambEstimate(temp, twoSyCount, 1)
                         type["trochee"] += trocheeEstimate(temp, twoSyCount, 1)
-                        type["anapest"] += anapestEstimate(temp, threeSyCount, 1)
+                        type["anapest"] += anapestEstimate(temp,
+                                                           threeSyCount, 1)
                         type["dactyl"] += dactylEstimate(temp, threeSyCount, 1)
                         type["amphibrach"] += amphibrachEstimate(temp, threeSyCount, 1)
                         if count < len(pronparse):
@@ -246,7 +269,8 @@ def analyzeMeter(poem):
                 type["trochee"] += trocheeEstimate(found_meter, twoSyCount, 1)
                 type["anapest"] += anapestEstimate(found_meter, threeSyCount, 1)
                 type["dactyl"] += dactylEstimate(found_meter, threeSyCount, 1)
-                type["amphibrach"] += amphibrachEstimate(found_meter, threeSyCount, 1)
+                type["amphibrach"] += amphibrachEstimate(found_meter,
+                                                         threeSyCount, 1)
                 twoSyCount = (twoSyCount + len(found_meter)) % 2
                 threeSyCount = (threeSyCount + len(found_meter)) % 3
                 sumvalue += 1 * len(found_meter)
@@ -277,7 +301,7 @@ def analyzeMeter(poem):
         best_fit = "amphibrachic"
         beat = 3
 
-    lengthtype = ["monometer", "dimeter", "trimeter", "tetrameter", 
+    lengthtype = ["monometer", "dimeter", "trimeter", "tetrameter",
                   "pentameter", "hexameter", "heptameter", "octameter"]
     print("Likelyhood to be iamb is", type["iamb"] / sumvalue)
     print("Likelyhood to be trochee is", type["trochee"] / sumvalue)
@@ -285,8 +309,11 @@ def analyzeMeter(poem):
     print("Likelyhood to be dactyl is", type["dactyl"] / sumvalue)
     print("Likelyhood to be amphibrach is", type["amphibrach"] / sumvalue)
 
-    print("Best meter fit is", best_fit, lengthtype[(meterlength.index(max(meterlength))-1)//beat])
-    return best_fit
+    print("Best meter fit is", best_fit, lengthtype[
+          (meterlength.index(max(meterlength)) - 1) // beat])
+
+    return [best_fit, lengthtype[
+          (meterlength.index(max(meterlength)) - 1) // beat]]
 
 
 def printPoemStress(poem, meter):
@@ -329,9 +356,9 @@ def printPoemStress(poem, meter):
                     following = True
                     new = False
                     count += 1
-                elif not line[i+1].isalpha():
+                elif not line[i + 1].isalpha():
                     result.append(" ")
-                elif (line[i+1] == "d" or line[i+1] == "s") and not line[i+2].isalpha() and line[i-1] != "l":
+                elif (line[i + 1] == "d" or line[i + 1] == "s") and not line[i + 2].isalpha() and line[i - 1] != "l":
                     result.append(" ")
                 else:
                     result.append(printMap[count % beat])
