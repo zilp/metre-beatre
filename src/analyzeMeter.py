@@ -265,9 +265,9 @@ def analyzeMeter(poem):
                     currentMeter += len(temp)
             else:
                 # case: if word is not in cmudict
-                print("Can't find", w)
+                # print("Can't find", w)
                 found_meter = finish_meter(w)
-                print(found_meter)
+                # print(found_meter)
                 meterstress += found_meter
                 type["iamb"] += iambEstimate(found_meter, syl2, 1)
                 type["trochee"] += trocheeEstimate(found_meter, syl2, 1)
@@ -278,7 +278,7 @@ def analyzeMeter(poem):
                 syl3 = (syl3 + len(found_meter)) % 3
                 sumvalue += 1 * len(found_meter)
         meterstress = simpleCleanup(meterstress)
-        print(meterstress)
+        # print(meterstress)
         if currentMeter < 17:
             meterlength[currentMeter] += 1
 
