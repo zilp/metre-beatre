@@ -1,3 +1,10 @@
+'''
+Created on Apr 21, 2016
+
+@author: shilpa
+'''
+
+
 from bs4 import BeautifulSoup
 import requests
 import re
@@ -14,6 +21,7 @@ def get_text_alt(url):
     line_list = []
     for x in poem_raw:
         x = str(x.encode('ascii', 'ignore')).strip()
+        x = x + "  "
         line_list.append(x)
     for x in line_list:
         if x == "":

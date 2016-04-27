@@ -1,3 +1,9 @@
+'''
+Created on Apr 16, 2016
+
+@author: shilpa
+'''
+
 from bs4 import BeautifulSoup
 import requests
 
@@ -14,6 +20,7 @@ def get_text(url):
     line_list = []
     for x in poem:
         x = str(x.encode('ascii', 'ignore')).strip()
+        x = x + "  "
         if x.startswith('Source:'):
             break
         line_list.append(x)
