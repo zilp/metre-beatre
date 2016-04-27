@@ -12,6 +12,8 @@ from nltk.metrics.distance import edit_distance
 
 
 def num_syllables(word):
+    '''Determine and return the number of
+    syllables of a word not in pronDict'''
     diphthongs = ['ou', 'ie', 'igh', 'oi', 'oy', 'oo', 'ea', 'ee', 'ai',
                   'ure', 'ough']
     vowels = ['a', 'e', 'i', 'o', 'u']
@@ -34,6 +36,8 @@ def num_syllables(word):
 
 
 def split_syllables(word):
+    '''Split a word using vowels and diphthongs
+    as boundaries and return as a list'''
     regex = re.compile(r'(ou)|(ie)|(igh)|(oi)|(oy)|(oo)|(ea)|(ee)|(ai)|(ure)|\
         (ough)|(a)|(e)|(i)|(o)|(u)|(quo)')
     raw_split = re.split(regex, word)  # has None as several elements
@@ -41,6 +45,8 @@ def split_syllables(word):
 
 
 def find_meter(word):
+    '''Generate and return the meter of a word not in pronDict by
+    assigning stress to diphthongs and no stress to regular vowels'''
     diphthongs = ['ou', 'ie', 'igh', 'oi', 'oy', 'oo', 'ea', 'ee', 'ai',
                   'ure', 'ough']
     vowels = ['a', 'e', 'i', 'o', 'u']
@@ -59,8 +65,9 @@ def find_meter(word):
     return result
 
 
-def find_closest_word_with_regex(regex, list=nltk.corpus.cmudict.dict().keys()):
-    for e in list:
+def find_closest_word_with_regex(regex):
+    key_list = nltk.corpus.cmudict.dict().keys()
+    for e in key_list:
         result = re.search(regex, e)
         if result is not None:
             return e
@@ -82,6 +89,7 @@ def find_closest_word(word):
 
 
 def finish_meter(unknown_word, pronDict=nltk.corpus.cmudict.dict()):
+    '''Determine and return the meter of an unknown word'''
     found_word = find_closest_word(unknown_word)
     unknown_word_syllables = num_syllables(unknown_word)
 
@@ -191,6 +199,7 @@ def retreiveStressPattern(word):
     return temp
 
 # END OF AUXILiARY FUNCTIONS
+
 
 def analyzeMeter(poem):
     ''' Takes in a list of lines representing a poem and returns a list of
