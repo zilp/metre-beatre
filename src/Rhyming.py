@@ -53,7 +53,7 @@ def find_rhyme_scheme(poem):
         # then remove all commas and other punctuation
         line_no_punc = re.sub(r'[^a-zA-Z\s]', " ", line_no_dash)
         word_list = line_no_punc.split()
-        final_word = word_list[-3]  # -3 to take extra line-end spaces into account
+        final_word = word_list[-1]
         if final_word in pronDict:
             # need to make a copy of pron so it doesn't reverse dict entry
             pron = []
