@@ -15,8 +15,12 @@ def main(url):
         poem = parser.get_text(url)
     else:
         return "Invalid input."
-    print analyzeMeter.analyzeMeter(poem) + '\n' + Rhyming.rhyme(poem)
-    return analyzeMeter.analyzeMeter(poem) + '\n' + Rhyming.rhyme(poem)
+    result = analyzeMeter.analyzeMeter(poem)
+    scansion = analyzeMeter.printPoemStress(poem, result[0])
+    rhyme = str(Rhyming.rhyme(poem))
+    print result[0] + " " + result[1] + '\n' + rhyme + '\n' + scansion
+    return str((result[0], result[1], rhyme, scansion))
+
 
 if __name__ == '__main__':
     main('http://www.poetryfoundation.org/poems-and-poets/poems/detail/89189')
