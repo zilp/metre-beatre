@@ -14,7 +14,6 @@ from nltk.metrics.distance import edit_distance
 def num_syllables(word):
     diphthongs = ['ou', 'ie', 'igh', 'oi', 'oy', 'oo', 'ea', 'ee', 'ai',
                   'ure', 'ough']
-
     vowels = ['a', 'e', 'i', 'o', 'u']
     exceptions = ['quo', 'qua', 'qui', 'que']
     syllables = 0
@@ -44,7 +43,6 @@ def split_syllables(word):
 def find_meter(word):
     diphthongs = ['ou', 'ie', 'igh', 'oi', 'oy', 'oo', 'ea', 'ee', 'ai',
                   'ure', 'ough']
-
     vowels = ['a', 'e', 'i', 'o', 'u']
     exceptions = ['quo', 'qua', 'qui', 'que']
     result = ""
@@ -83,9 +81,7 @@ def find_closest_word(word):
     return find_closest_word_with_regex(regex)
 
 
-
-def finish_meter(unknown_word, pronDict = nltk.corpus.cmudict.dict()):
-
+def finish_meter(unknown_word, pronDict=nltk.corpus.cmudict.dict()):
     found_word = find_closest_word(unknown_word)
     unknown_word_syllables = num_syllables(unknown_word)
 
@@ -194,6 +190,7 @@ def retreiveStressPattern(word):
     temp = re.sub("2", "1", temp)
     return temp
 
+# END OF AUXILiARY FUNCTIONS
 
 def analyzeMeter(poem):
     ''' Takes in a list of lines representing a poem and returns a list of
@@ -209,8 +206,10 @@ def analyzeMeter(poem):
     for s in poem:
         meterstress = ""
         currentMeter = 0
-        twoSyCount = 0
-        threeSyCount = 0
+        # place holder for two syllable meter
+        syl2 = 0
+        # place holder for three syllable meter
+        syl3 = 0
         # filter and format line
         line_lowercase = s.lower()
         line_no_dash = re.sub(r'[\'\,]', "", line_lowercase)
@@ -224,7 +223,7 @@ def analyzeMeter(poem):
                     temp = retreiveStressPattern(pronparse[0])
                     meterstress += temp
                     if len(temp) == 1:
-                        #less weight for single syllables
+                        # less weight for single syllables
                         type["iamb"] += 2
                         type["trochee"] += 2
                         type["anapest"] += 2
@@ -232,14 +231,13 @@ def analyzeMeter(poem):
                         type["amphibrach"] += 2
                     else:
                         # increment record by likeliness value for each meter
-                        type["iamb"] += iambEstimate(temp, twoSyCount, 4)
-                        type["trochee"] += trocheeEstimate(temp, twoSyCount, 4)
-                        type["anapest"] += anapestEstimate(temp,
-                                                           threeSyCount, 4)
-                        type["dactyl"] += dactylEstimate(temp, threeSyCount, 4)
-                        type["amphibrach"] += amphibrachEstimate(temp, threeSyCount, 4)
-                    twoSyCount = (twoSyCount + len(temp)) % 2
-                    threeSyCount = (threeSyCount + len(temp)) % 3
+                        type["iamb"] += iambEstimate(temp, syl2, 4)
+                        type["trochee"] += trocheeEstimate(temp, syl2, 4)
+                        type["anapest"] += anapestEstimate(temp, syl3, 4)
+                        type["dactyl"] += dactylEstimate(temp, syl3, 4)
+                        type["amphibrach"] += amphibrachEstimate(temp, syl3, 4)
+                    syl2 = (syl2 + len(temp)) % 2
+                    syl3 = (syl3 + len(temp)) % 3
                     sumvalue += 4 * len(temp)
                     currentMeter += len(temp)
                 else:
@@ -248,12 +246,11 @@ def analyzeMeter(poem):
                     count = 1
                     for word in pronparse:
                         temp = retreiveStressPattern(word)
-                        type["iamb"] += iambEstimate(temp, twoSyCount, 1)
-                        type["trochee"] += trocheeEstimate(temp, twoSyCount, 1)
-                        type["anapest"] += anapestEstimate(temp,
-                                                           threeSyCount, 1)
-                        type["dactyl"] += dactylEstimate(temp, threeSyCount, 1)
-                        type["amphibrach"] += amphibrachEstimate(temp, threeSyCount, 1)
+                        type["iamb"] += iambEstimate(temp, syl2, 1)
+                        type["trochee"] += trocheeEstimate(temp, syl2, 1)
+                        type["anapest"] += anapestEstimate(temp, syl3, 1)
+                        type["dactyl"] += dactylEstimate(temp, syl3, 1)
+                        type["amphibrach"] += amphibrachEstimate(temp, syl3, 1)
                         if count < len(pronparse):
                             count += 1
                             meterstress += temp + '|'
@@ -262,8 +259,8 @@ def analyzeMeter(poem):
                             meterstress += temp + ')'
                     teststr = "".join(pronparse[0])
                     temp = "".join(re.findall(r'\d+', teststr))
-                    twoSyCount = (twoSyCount + len(temp)) % 2
-                    threeSyCount = (threeSyCount + len(temp)) % 3
+                    syl2 = (syl2 + len(temp)) % 2
+                    syl3 = (syl3 + len(temp)) % 3
                     sumvalue += 1 * len(temp)
                     currentMeter += len(temp)
             else:
@@ -272,14 +269,13 @@ def analyzeMeter(poem):
                 found_meter = finish_meter(w)
                 print(found_meter)
                 meterstress += found_meter
-                type["iamb"] += iambEstimate(found_meter, twoSyCount, 1)
-                type["trochee"] += trocheeEstimate(found_meter, twoSyCount, 1)
-                type["anapest"] += anapestEstimate(found_meter, threeSyCount, 1)
-                type["dactyl"] += dactylEstimate(found_meter, threeSyCount, 1)
-                type["amphibrach"] += amphibrachEstimate(found_meter,
-                                                         threeSyCount, 1)
-                twoSyCount = (twoSyCount + len(found_meter)) % 2
-                threeSyCount = (threeSyCount + len(found_meter)) % 3
+                type["iamb"] += iambEstimate(found_meter, syl2, 1)
+                type["trochee"] += trocheeEstimate(found_meter, syl2, 1)
+                type["anapest"] += anapestEstimate(found_meter, syl3, 1)
+                type["dactyl"] += dactylEstimate(found_meter, syl3, 1)
+                type["amphibrach"] += amphibrachEstimate(found_meter, syl3, 1)
+                syl2 = (syl2 + len(found_meter)) % 2
+                syl3 = (syl3 + len(found_meter)) % 3
                 sumvalue += 1 * len(found_meter)
         meterstress = simpleCleanup(meterstress)
         print(meterstress)
@@ -311,6 +307,9 @@ def analyzeMeter(poem):
 
     lengthtype = ["monometer", "dimeter", "trimeter", "tetrameter",
                   "pentameter", "hexameter", "heptameter", "octameter"]
+
+    '''
+    debugging section
     print("Likelyhood to be iamb is", type["iamb"] / sumvalue)
     print("Likelyhood to be trochee is", type["trochee"] / sumvalue)
     print("Likelyhood to be anapest is", type["anapest"] / sumvalue)
@@ -319,9 +318,9 @@ def analyzeMeter(poem):
 
     print("Best meter fit is", best_fit, lengthtype[
           (meterlength.index(max(meterlength)) - 1) // beat])
-
+    '''
     return [best_fit, lengthtype[
-          (meterlength.index(max(meterlength)) - 1) // beat]]
+        (meterlength.index(max(meterlength)) - 1) // beat]]
 
 
 def printPoemStress(poem, meter):
@@ -352,7 +351,8 @@ def printPoemStress(poem, meter):
         result.append("\n")
         for i in range(len(line)):
             w = line[i]
-            # assume all vowels minus e and plus y are a syllable if not chained
+            # assume all vowels minus e and plus y are a syllable if not
+            # chained
             if w == "a" or w == "i" or w == "o" or w == "u" or w == "y":
                 if not following:
                     result.append(printMap[count % beat])
@@ -393,12 +393,3 @@ def printPoemStress(poem, meter):
         result.append("\n")
 
     return "".join(result)
-
-
-'''
-poem = open('Destruction of Sennacherib.txt', 'r')
-raw_lines = poem.readlines()
-meter = analyzeMeter(raw_lines)
-result = printPoemStress(raw_lines, meter[0])
-print(result)
-'''
