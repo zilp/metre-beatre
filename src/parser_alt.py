@@ -33,6 +33,7 @@ def get_text_alt(url):
     # get title
     title = soup.body.find('h1', attrs={'class': 'page__title title'})
     title = title.get_text()
+    title = str(title.encode('ascii', 'ignore')).strip()
     return (title, valid_lines)
 
 
