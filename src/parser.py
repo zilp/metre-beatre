@@ -12,6 +12,7 @@ def get_text(url):
     if r.status_code == 404:
         raise ValueError("Invalid URL.")
     soup = BeautifulSoup(r.text, "html.parser")
+    # get poem
     poem = soup.find(id="poem")
     if poem is None:
         poem = soup.find(class_="poem")
@@ -24,7 +25,10 @@ def get_text(url):
         if x.startswith('Source:'):
             break
         line_list.append(x)
-    return line_list
+    # get title
+    title = soup.body.find('span', attrs={'class': 'hdg hdg_1'})
+    title = title.get_text()
+    return (title, line_list)
 
 
 def main():
