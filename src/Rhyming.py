@@ -7,7 +7,6 @@ from __future__ import absolute_import, print_function
 import string
 import re
 import nltk
-from numba.tests.test_conversion import addition
 
 
 def find_end_in_dict(unknown_word):
