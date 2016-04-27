@@ -3,8 +3,8 @@ Created on Apr 24, 2016
 
 @author: shilpa
 '''
-from parser import get_text
-import parser, parser_alt, analyzeMeter, Rhyming
+from parser_orig import get_text
+import parser_orig, parser_alt, analyzeMeter, Rhyming
 
 # used by server
 def main(url):
