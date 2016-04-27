@@ -15,6 +15,7 @@ def get_text_alt(url):
     if r.status_code == 404:
         raise ValueError("Invalid URL.")
     soup = BeautifulSoup(r.text, "html.parser")
+    # get poem
     poem_contents = soup.find_all(property="content:encoded")
     poem = poem_contents[0].get_text('\n')
     poem_raw = poem.split('\n')
@@ -26,11 +27,14 @@ def get_text_alt(url):
     for x in line_list:
         if x == "":
             line_list.remove(x)
-    return line_list
+    # get title
+    title = soup.body.find('h1', attrs={'class': 'page__title title'})
+    title = title.get_text()
+    return (title, line_list)
 
 
 def main():
-    get_text("https://www.poets.org/poetsorg/poem/sun-bemidji-minnesota")
+    get_text_alt("https://www.poets.org/poetsorg/poem/do-not-go-gentle-good-night")
 
 
 if __name__ == "__main__":
