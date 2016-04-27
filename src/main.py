@@ -13,8 +13,8 @@ def main(url):
         title = parser_alt.get_text_alt(url)[0]
         poem = parser_alt.get_text_alt(url)[1]
     elif "poetryfoundation" in url:
-        title = parser.get_text(url)[0]
-        poem = parser.get_text(url)[1]
+        title = parser_orig.get_text(url)[0]
+        poem = parser_orig.get_text(url)[1]
     else:
         return "Invalid input."
     print poem
