@@ -349,6 +349,7 @@ def printPoemStress(poem, meter):
         new = True
         following = False
         result.append(line)
+        result.append("\n")
         for i in range(len(line)):
             w = line[i]
             # assume all vowels minus e and plus y are a syllable if not chained
