@@ -18,8 +18,7 @@ def main(url):
     result = analyzeMeter.analyzeMeter(poem)
     scansion = analyzeMeter.printPoemStress(poem, result[0])
     rhyme = str(Rhyming.rhyme(poem))
-    print result[0] + " " + result[1] + '\n' + rhyme + '\n' + scansion
-    return str((result[0], result[1], rhyme, scansion))
+    return '\n' + "METER" + '\n' + result[0] + " " + result[1] + '\n\n' + "RHYME SCHEME" + '\n' + rhyme + '\n\n' + "SCANSION" + '\n' + scansion
 
 
 if __name__ == '__main__':
