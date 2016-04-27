@@ -10,16 +10,19 @@ import parser, parser_alt, analyzeMeter, Rhyming
 def main(url):
     poem = []
     if "poets.org" in url:
-        poem = parser_alt.get_text_alt(url)
+        title = parser_alt.get_text_alt(url)[0]
+        poem = parser_alt.get_text_alt(url)[1]
     elif "poetryfoundation" in url:
-        poem = parser.get_text(url)
+        title = parser.get_text(url)[0]
+        poem = parser.get_text(url)[1]
     else:
         return "Invalid input."
+    print poem
     result = analyzeMeter.analyzeMeter(poem)
     scansion = analyzeMeter.printPoemStress(poem, result[0])
-    rhyme = str(Rhyming.rhyme(poem))
-    return '\n' + "METER" + '\n' + result[0] + " " + result[1] + '\n\n' + "RHYME SCHEME" + '\n' + rhyme + '\n\n' + "SCANSION" + '\n' + scansion
+    rhyme = str(Rhyming.find_rhyme_scheme(poem))
+    return '\n' + title + '\n\n' + "METER" + '\n' + result[0] + " " + result[1] + '\n\n' + "RHYME SCHEME" + '\n' + rhyme + '\n\n' + "SCANSION" + '\n' + scansion
 
 
 if __name__ == '__main__':
-    main('http://www.poetryfoundation.org/poems-and-poets/poems/detail/89189')
+    main('https://www.poets.org/poetsorg/poem/epitaph-tyrant')
