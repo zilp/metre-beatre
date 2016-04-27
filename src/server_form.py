@@ -30,11 +30,13 @@ display_text = '''
 		<body>
 		  <h1>METRE-BEATRE <br/> <span style = "font-size: 20px"> guesses a poem's meter + tells you all sorts of other interesting things! </span> </h1>
 			<form method="POST" action="/">
-				<label>Insert URL of poem:</label> <br/>
+				<label>Insert URL of poem (on Poets.org or Poetry Foundation):</label> <br/>
 				<input type="text" name="poem"/> <br/>
 				<input type="submit" value="Send"/>
 			</form>
-			 meter of poem (best guess):<br/>%s
+			<pre>
+			 meter of poem (best guess) and rhyme scheme:<br/>%s
+			</pre>
 		</body>
 	</html>
 	'''
@@ -66,7 +68,7 @@ class myHandler(BaseHTTPRequestHandler):
 			return
 
 		except IOError:
-			self.send_error(404,'File Not Found: %s' % self.path)
+			self.send_error(404,'File not found: %s' % self.path)
 
 	#Handler for the POST requests
 	def do_POST(self):
@@ -90,14 +92,10 @@ class myHandler(BaseHTTPRequestHandler):
 			self.wfile.write(display_text % "Invalid input.")
 
 try:
-	#Create a web server and define the handler to manage the
-	#incoming request
 	server = HTTPServer(('', PORT_NUMBER), myHandler)
 	print 'Started httpserver on port ' , PORT_NUMBER
-
-	#Wait forever for incoming htto requests
 	server.serve_forever()
 
 except KeyboardInterrupt:
-	print '^C received, shutting down the web server'
+	print 'Shutting down server...'
 	server.socket.close()
