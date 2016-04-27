@@ -33,12 +33,11 @@ def rhyme_generator():
         index += 1
 
 
-def find_rhyme_scheme(text):
+def find_rhyme_scheme(poem):
     vowels = [u'AO', u'AA', u'IY', u'UW', u'EH', u'IH', u'UH', u'AH', u'AX',
               u'AE', u'EY', u'AY', u'OW', u'AW', u'OY', u'ER', u'AXR',
               u'EH R', u'UH R', u'AO R', u'AA R', u'IH R', u'IY R', u'AW R']
     pronDict = nltk.corpus.cmudict.dict()
-    poem = open(text, 'r')
     # list of all the final syllables in the poem in order
     final_syllable_list = []
     # dict of syllables and their representative letters in the rhyme scheme
@@ -47,53 +46,47 @@ def find_rhyme_scheme(text):
     rhyme_scheme = []
 
     # Step 1: isolate the last syllable of the last word of every line
-    try:
-        raw_lines = poem.readlines()
-        for line in raw_lines:
-            line_lowercase = line.lower()
-            # remove all dashes first
-            line_no_dash = re.sub(r'[\'\,]', "", line_lowercase)
-            # then remove all commas and other punctuation
-            line_no_punc = re.sub(r'[^a-zA-Z\s]', " ", line_no_dash)
-            word_list = line_no_punc.split()
-            final_word = word_list[-3]  # -3 to take extra line-end spaces into account
-            if final_word in pronDict:
-                # need to make a copy of pron so it doesn't reverse dict entry
-                pron = []
-                # if multiple pronunciations, pick the first one
-                pron += pronDict[final_word][0]
-                # extract final syllable: vowel plus optional consonant
-                pron.reverse()
-                for i, sound in enumerate(pron):
+    for line in poem:
+        line_lowercase = line.lower()
+        # remove all dashes first
+        line_no_dash = re.sub(r'[\'\,]', "", line_lowercase)
+        # then remove all commas and other punctuation
+        line_no_punc = re.sub(r'[^a-zA-Z\s]', " ", line_no_dash)
+        word_list = line_no_punc.split()
+        final_word = word_list[-3]  # -3 to take extra line-end spaces into account
+        if final_word in pronDict:
+            # need to make a copy of pron so it doesn't reverse dict entry
+            pron = []
+            # if multiple pronunciations, pick the first one
+            pron += pronDict[final_word][0]
+            # extract final syllable: vowel plus optional consonant
+            pron.reverse()
+            for i, sound in enumerate(pron):
+                # remove the numeric stress markers
+                sound = re.sub(r'\d', "", sound)
+                if sound in vowels:
+                    if i is 0:
+                        final_syllable_list.append(str(sound))
+                    else:
+                        # need the consonant sound as part of the rhyme
+                        cons = pron[i-1]
+                        final_syllable_list.append(str(sound) + str(cons))
+                    break
+        else:
+            # search for a similar final syllable in pronDict
+            pron = find_end_in_dict(final_word)[0]
+            syllable = ""
+            if pron is not None:
+                for sound in pron:
                     # remove the numeric stress markers
                     sound = re.sub(r'\d', "", sound)
-                    if sound in vowels:
-                        if i is 0:
-                            final_syllable_list.append(str(sound))
-                        else:
-                            # need the consonant sound as part of the rhyme
-                            cons = pron[i-1]
-                            final_syllable_list.append(str(sound) + str(cons))
-                        break
+                    syllable += sound
+                final_syllable_list.append(syllable)
             else:
-                # search for a similar final syllable in pronDict
-                pron = find_end_in_dict(final_word)[0]
-                syllable = ""
-                if pron is not None:
-                    for sound in pron:
-                        # remove the numeric stress markers
-                        sound = re.sub(r'\d', "", sound)
-                        syllable += sound
-                    final_syllable_list.append(syllable)
-                else:
-                    # if no pron in pronDict, signal that with '?'
-                    final_syllable_list.append('?')
-                    break
+                # if no pron in pronDict, signal that with '?'
+                final_syllable_list.append('?')
+                break
 
-    except IOError:
-        return "File not found."
-    finally:
-        poem.close()
 
     # Step 2. Return rhyme scheme and number of distinct rhymes
 
@@ -115,7 +108,7 @@ def find_rhyme_scheme(text):
     for syllable in final_syllable_list:
         rhyme_scheme.append(rhyme_pairs[syllable])
 
-    print(rhyme_scheme)
+    return rhyme_scheme
     print("This poem uses {} distinct rhymes.".format(num_distinct_rhymes))
 
 
