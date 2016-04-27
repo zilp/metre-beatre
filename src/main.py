@@ -25,4 +25,4 @@ def main(url):
 
 
 if __name__ == '__main__':
-    main('https://www.poets.org/poetsorg/poem/epitaph-tyrant')
+    main('http://www.poetryfoundation.org/poems-and-poets/poems/detail/43644"')

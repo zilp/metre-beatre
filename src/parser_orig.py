@@ -36,6 +36,8 @@ def get_text(url):
     # get title
     title = soup.body.find('span', attrs={'class': 'hdg hdg_1'})
     title = title.get_text()
+    for x in valid_lines:
+        print x
     return (title, valid_lines)
 
 
