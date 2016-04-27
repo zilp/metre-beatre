@@ -9,8 +9,10 @@ from bs4 import BeautifulSoup
 import requests
 import re
 
+LINE = re.compile('[^A-Za-z]')
 
 def get_text_alt(url):
+    valid_lines = []
     r = requests.get(url)
     if r.status_code == 404:
         raise ValueError("Invalid URL.")
@@ -24,17 +26,18 @@ def get_text_alt(url):
         x = str(x.encode('ascii', 'ignore')).strip()
         x = x + "  "
         line_list.append(x)
+    # delete blank lines
     for x in line_list:
-        if x == "":
-            line_list.remove(x)
+        if not len(re.sub(LINE, "", x)) == 0:
+            valid_lines.append(x)
     # get title
     title = soup.body.find('h1', attrs={'class': 'page__title title'})
     title = title.get_text()
-    return (title, line_list)
+    return (title, valid_lines)
 
 
 def main():
-    get_text_alt("https://www.poets.org/poetsorg/poem/do-not-go-gentle-good-night")
+    get_text_alt("https://www.poets.org/poetsorg/poem/epitaph-tyrant")
 
 
 if __name__ == "__main__":

@@ -6,8 +6,12 @@ Created on Apr 16, 2016
 
 from bs4 import BeautifulSoup
 import requests
+import re
+
+LINE = re.compile('[^A-Za-z]')
 
 def get_text(url):
+    valid_lines = []
     r = requests.get(url)
     if r.status_code == 404:
         raise ValueError("Invalid URL.")
@@ -25,6 +29,10 @@ def get_text(url):
         if x.startswith('Source:'):
             break
         line_list.append(x)
+    # delete blank lines
+    for x in line_list:
+        if not len(re.sub(LINE, "", x)) == 0:
+            valid_lines.append(x)
     # get title
     title = soup.body.find('span', attrs={'class': 'hdg hdg_1'})
     title = title.get_text()
