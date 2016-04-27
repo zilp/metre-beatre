@@ -374,10 +374,13 @@ def printPoemStress(poem, meter):
                         and not line[i + 2].isalpha() and line[i - 1] != "l":
                     result.append(" ")
                 else:
-                    result.append(printMap[count % beat])
-                    following = True
-                    new = False
-                    count += 1
+                    if not following:
+                        result.append(printMap[count % beat])
+                        following = True
+                        new = False
+                        count += 1
+                    else:
+                        result.append(" ")
             # reset for new word
             elif w == " ":
                 new = True
