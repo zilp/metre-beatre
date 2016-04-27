@@ -28,14 +28,14 @@ display_text = '''
 			</style>
 	  </header>
 		<body>
-		  <h1>METRE-BEATRE <br/> <span style = "font-size: 20px"> guesses a poem's meter + tells you all sorts of other interesting things! </span> </h1>
+		  <h1>METRE-BEATRE <br/> <span style = "font-size: 20px"> guesses a poem's meter + rhyme scheme! </span> </h1>
 			<form method="POST" action="/">
 				<label>Insert URL of poem (on Poets.org or Poetry Foundation):</label> <br/>
 				<input type="text" name="poem"/> <br/>
 				<input type="submit" value="Send"/>
 			</form>
 			<pre>
-			 meter of poem (best guess) and rhyme scheme:<br/>%s
+			 %s
 			</pre>
 		</body>
 	</html>
