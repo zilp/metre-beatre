@@ -36,7 +36,7 @@ def get_text(url):
     # get title
     title = soup.body.find('span', attrs={'class': 'hdg hdg_1'})
     title = title.get_text()
-    return (title, line_list)
+    return (title, valid_lines)
 
 
 def main():
@@ -44,4 +44,4 @@ def main():
 
 
 if __name__ == "__main__":
-    get_text("http://www.poetryfoundation.org/poems-and-poets/poems/detail/89189")
+    get_text("http://www.poetryfoundation.org/poems-and-poets/poems/detail/43644")
