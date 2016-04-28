@@ -17,10 +17,10 @@ def main(url):
         poem = parser_orig.get_text(url)[1]
     else:
         return "Invalid input."
-    print poem
     result = analyzeMeter.analyzeMeter(poem)
     scansion = analyzeMeter.printPoemStress(poem, result[0])
     rhyme = str(Rhyming.find_rhyme_scheme(poem))
+    print '\n' + title + '\n\n' + "METER" + '\n' + result[0] + " " + result[1] + '\n\n' + "RHYME SCHEME" + '\n' + rhyme + '\n\n' + "SCANSION" + '\n' + scansion
     return '\n' + title + '\n\n' + "METER" + '\n' + result[0] + " " + result[1] + '\n\n' + "RHYME SCHEME" + '\n' + rhyme + '\n\n' + "SCANSION" + '\n' + scansion
 
 
