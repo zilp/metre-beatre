@@ -1,8 +1,9 @@
 '''
-Created on Apr 16, 2016
+Created on Apr 21, 2016
 
 @author: shilpa
 '''
+
 
 from bs4 import BeautifulSoup
 import requests
@@ -17,31 +18,28 @@ def get_text(url):
         raise ValueError("Invalid URL.")
     soup = BeautifulSoup(r.text, "html.parser")
     # get poem
-    poem = soup.find(id="poem")
-    if poem is None:
-        poem = soup.find(class_="poem")
-    poem = poem.get_text('\n')
-    poem = poem.split('\n')
+    poem_contents = soup.find_all(property="content:encoded")
+    poem = poem_contents[0].get_text('\n')
+    poem_raw = poem.split('\n')
     line_list = []
-    for x in poem:
+    for x in poem_raw:
         x = str(x.encode('ascii', 'ignore')).strip()
         x = x + "  "
-        if x.startswith('Source:'):
-            break
         line_list.append(x)
     # delete blank lines
     for x in line_list:
         if not len(re.sub(LINE, "", x)) == 0:
             valid_lines.append(x)
     # get title
-    title = soup.body.find('span', attrs={'class': 'hdg hdg_1'})
+    title = soup.body.find('h1', attrs={'class': 'page__title title'})
     title = title.get_text()
-    return (title, line_list)
+    title = str(title.encode('ascii', 'ignore')).strip()
+    return (title, valid_lines)
 
 
 def main():
-    pass
+    get_text("https://www.poets.org/poetsorg/poem/epitaph-tyrant")
 
 
 if __name__ == "__main__":
-    get_text("http://www.poetryfoundation.org/poems-and-poets/poems/detail/89189")
+    main()

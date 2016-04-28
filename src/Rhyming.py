@@ -10,6 +10,8 @@ import nltk
 
 
 def find_end_in_dict(unknown_word):
+    '''If a word is not in pronDict, find the
+    pronunciation of its ending in pronDict'''
     pronDict = nltk.corpus.cmudict.dict()
     ending = ''
     unknown_word_list = [letter for letter in unknown_word]
@@ -21,6 +23,8 @@ def find_end_in_dict(unknown_word):
 
 
 def rhyme_generator():
+    '''Generate a list of letters to represent
+    rhyme scheme'''
     letters = list(string.ascii_uppercase)
     index = 0
     while True:
@@ -34,6 +38,7 @@ def rhyme_generator():
 
 
 def find_rhyme_scheme(poem):
+    '''Determine and return the poem's rhyme scheme'''
     vowels = [u'AO', u'AA', u'IY', u'UW', u'EH', u'IH', u'UH', u'AH', u'AX',
               u'AE', u'EY', u'AY', u'OW', u'AW', u'OY', u'ER', u'AXR',
               u'EH R', u'UH R', u'AO R', u'AA R', u'IH R', u'IY R', u'AW R']
@@ -86,7 +91,6 @@ def find_rhyme_scheme(poem):
                 # if no pron in pronDict, signal that with '?'
                 final_syllable_list.append('?')
                 break
-
 
     # Step 2. Return rhyme scheme and number of distinct rhymes
 

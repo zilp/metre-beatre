@@ -12,6 +12,8 @@ from nltk.metrics.distance import edit_distance
 
 
 def num_syllables(word):
+    '''Determine and return the number of
+    syllables of a word not in pronDict'''
     diphthongs = ['ou', 'ie', 'igh', 'oi', 'oy', 'oo', 'ea', 'ee', 'ai',
                   'ure', 'ough']
     vowels = ['a', 'e', 'i', 'o', 'u']
@@ -34,6 +36,8 @@ def num_syllables(word):
 
 
 def split_syllables(word):
+    '''Split a word using vowels and diphthongs
+    as boundaries and return as a list'''
     regex = re.compile(r'(ou)|(ie)|(igh)|(oi)|(oy)|(oo)|(ea)|(ee)|(ai)|(ure)|\
         (ough)|(a)|(e)|(i)|(o)|(u)|(quo)')
     raw_split = re.split(regex, word)  # has None as several elements
@@ -41,6 +45,8 @@ def split_syllables(word):
 
 
 def find_meter(word):
+    '''Generate and return the meter of a word not in pronDict by
+    assigning stress to diphthongs and no stress to regular vowels'''
     diphthongs = ['ou', 'ie', 'igh', 'oi', 'oy', 'oo', 'ea', 'ee', 'ai',
                   'ure', 'ough']
     vowels = ['a', 'e', 'i', 'o', 'u']
@@ -59,8 +65,9 @@ def find_meter(word):
     return result
 
 
-def find_closest_word_with_regex(regex, list=nltk.corpus.cmudict.dict().keys()):
-    for e in list:
+def find_closest_word_with_regex(regex):
+    key_list = nltk.corpus.cmudict.dict().keys()
+    for e in key_list:
         result = re.search(regex, e)
         if result is not None:
             return e
@@ -82,6 +89,7 @@ def find_closest_word(word):
 
 
 def finish_meter(unknown_word, pronDict=nltk.corpus.cmudict.dict()):
+    '''Determine and return the meter of an unknown word'''
     found_word = find_closest_word(unknown_word)
     unknown_word_syllables = num_syllables(unknown_word)
 
@@ -192,6 +200,7 @@ def retreiveStressPattern(word):
 
 # END OF AUXILiARY FUNCTIONS
 
+
 def analyzeMeter(poem):
     ''' Takes in a list of lines representing a poem and returns a list of
     two strings, where first string is the meter type and second is the length
@@ -236,6 +245,7 @@ def analyzeMeter(poem):
                         type["anapest"] += anapestEstimate(temp, syl3, 4)
                         type["dactyl"] += dactylEstimate(temp, syl3, 4)
                         type["amphibrach"] += amphibrachEstimate(temp, syl3, 4)
+                    # accounting variables and info.
                     syl2 = (syl2 + len(temp)) % 2
                     syl3 = (syl3 + len(temp)) % 3
                     sumvalue += 4 * len(temp)
@@ -265,9 +275,7 @@ def analyzeMeter(poem):
                     currentMeter += len(temp)
             else:
                 # case: if word is not in cmudict
-                # print("Can't find", w)
                 found_meter = finish_meter(w)
-                # print(found_meter)
                 meterstress += found_meter
                 type["iamb"] += iambEstimate(found_meter, syl2, 1)
                 type["trochee"] += trocheeEstimate(found_meter, syl2, 1)
@@ -278,7 +286,8 @@ def analyzeMeter(poem):
                 syl3 = (syl3 + len(found_meter)) % 3
                 sumvalue += 1 * len(found_meter)
         meterstress = simpleCleanup(meterstress)
-        # print(meterstress)
+
+        # record number of syllables in current line
         if currentMeter < 17:
             meterlength[currentMeter] += 1
 
@@ -308,25 +317,18 @@ def analyzeMeter(poem):
     lengthtype = ["monometer", "dimeter", "trimeter", "tetrameter",
                   "pentameter", "hexameter", "heptameter", "octameter"]
 
-    '''
-    debugging section
-    print("Likelyhood to be iamb is", type["iamb"] / sumvalue)
-    print("Likelyhood to be trochee is", type["trochee"] / sumvalue)
-    print("Likelyhood to be anapest is", type["anapest"] / sumvalue)
-    print("Likelyhood to be dactyl is", type["dactyl"] / sumvalue)
-    print("Likelyhood to be amphibrach is", type["amphibrach"] / sumvalue)
-
-    print("Best meter fit is", best_fit, lengthtype[
-          (meterlength.index(max(meterlength)) - 1) // beat])
-    '''
     return [best_fit, lengthtype[
         (meterlength.index(max(meterlength)) - 1) // beat]]
 
 
 def printPoemStress(poem, meter):
+    ''' the function will take in a poem and its predicted meter 
+    pattern and return a string composed of each line and its 
+    scansion underneath it '''
     result = []
     index = 0
     printmap = []
+    # determine scansion type from input
     if meter == "iambic":
         printMap = ["U", "/"]
         beat = 2
