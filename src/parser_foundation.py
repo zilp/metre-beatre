@@ -42,11 +42,3 @@ def get_text(url):
         print x
     return (title, valid_lines)
 
-
-def main():
-    pass
-
-
-if __name__ == "__main__":
-    get_text(
-        "http://www.poetryfoundation.org/poems-and-poets/poems/detail/43644")
