@@ -36,11 +36,3 @@ def get_text(url):
     title = title.get_text()
     title = str(title.encode('ascii', 'ignore')).strip()
     return (title, valid_lines)
-
-
-def main():
-    get_text("https://www.poets.org/poetsorg/poem/epitaph-tyrant")
-
-
-if __name__ == "__main__":
-    main()
