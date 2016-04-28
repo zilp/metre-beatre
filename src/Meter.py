@@ -207,11 +207,10 @@ def analyzeMeter(poem):
     of the foot. '''
     pronDict = nltk.corpus.cmudict.dict()
     # set up datatype for recording information
-    type = {"iamb": 0, "trochee": 0,
-            "anapest": 0, "dactyl": 0, "amphibrach": 0}
+    typ = {"iamb": 0, "trochee": 0,
+           "anapest": 0, "dactyl": 0, "amphibrach": 0}
     meterlength = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
     sumvalue = 0
-    reg = re.compile('[^a-zA-Z\']')
     for s in poem:
         meterstress = ""
         currentMeter = 0
@@ -233,18 +232,18 @@ def analyzeMeter(poem):
                     meterstress += temp
                     if len(temp) == 1:
                         # less weight for single syllables
-                        type["iamb"] += 2
-                        type["trochee"] += 2
-                        type["anapest"] += 2
-                        type["dactyl"] += 2
-                        type["amphibrach"] += 2
+                        typ["iamb"] += 2
+                        typ["trochee"] += 2
+                        typ["anapest"] += 2
+                        typ["dactyl"] += 2
+                        typ["amphibrach"] += 2
                     else:
                         # increment record by likeliness value for each meter
-                        type["iamb"] += iambEstimate(temp, syl2, 4)
-                        type["trochee"] += trocheeEstimate(temp, syl2, 4)
-                        type["anapest"] += anapestEstimate(temp, syl3, 4)
-                        type["dactyl"] += dactylEstimate(temp, syl3, 4)
-                        type["amphibrach"] += amphibrachEstimate(temp, syl3, 4)
+                        typ["iamb"] += iambEstimate(temp, syl2, 4)
+                        typ["trochee"] += trocheeEstimate(temp, syl2, 4)
+                        typ["anapest"] += anapestEstimate(temp, syl3, 4)
+                        typ["dactyl"] += dactylEstimate(temp, syl3, 4)
+                        typ["amphibrach"] += amphibrachEstimate(temp, syl3, 4)
                     # accounting variables and info.
                     syl2 = (syl2 + len(temp)) % 2
                     syl3 = (syl3 + len(temp)) % 3
@@ -256,11 +255,11 @@ def analyzeMeter(poem):
                     count = 1
                     for word in pronparse:
                         temp = retreiveStressPattern(word)
-                        type["iamb"] += iambEstimate(temp, syl2, 1)
-                        type["trochee"] += trocheeEstimate(temp, syl2, 1)
-                        type["anapest"] += anapestEstimate(temp, syl3, 1)
-                        type["dactyl"] += dactylEstimate(temp, syl3, 1)
-                        type["amphibrach"] += amphibrachEstimate(temp, syl3, 1)
+                        typ["iamb"] += iambEstimate(temp, syl2, 1)
+                        typ["trochee"] += trocheeEstimate(temp, syl2, 1)
+                        typ["anapest"] += anapestEstimate(temp, syl3, 1)
+                        typ["dactyl"] += dactylEstimate(temp, syl3, 1)
+                        typ["amphibrach"] += amphibrachEstimate(temp, syl3, 1)
                         if count < len(pronparse):
                             count += 1
                             meterstress += temp + '|'
@@ -277,11 +276,11 @@ def analyzeMeter(poem):
                 # case: if word is not in cmudict
                 found_meter = finish_meter(w)
                 meterstress += found_meter
-                type["iamb"] += iambEstimate(found_meter, syl2, 1)
-                type["trochee"] += trocheeEstimate(found_meter, syl2, 1)
-                type["anapest"] += anapestEstimate(found_meter, syl3, 1)
-                type["dactyl"] += dactylEstimate(found_meter, syl3, 1)
-                type["amphibrach"] += amphibrachEstimate(found_meter, syl3, 1)
+                typ["iamb"] += iambEstimate(found_meter, syl2, 1)
+                typ["trochee"] += trocheeEstimate(found_meter, syl2, 1)
+                typ["anapest"] += anapestEstimate(found_meter, syl3, 1)
+                typ["dactyl"] += dactylEstimate(found_meter, syl3, 1)
+                typ["amphibrach"] += amphibrachEstimate(found_meter, syl3, 1)
                 syl2 = (syl2 + len(found_meter)) % 2
                 syl3 = (syl3 + len(found_meter)) % 3
                 sumvalue += 1 * len(found_meter)
@@ -295,22 +294,22 @@ def analyzeMeter(poem):
     temp_max = 0
     beat = 2
     # figure out meter type and length from recorded information
-    if(type["iamb"] > temp_max):
-        temp_max = type["iamb"]
+    if(typ["iamb"] > temp_max):
+        temp_max = typ["iamb"]
         best_fit = "iambic"
-    if(type["trochee"] > temp_max):
-        temp_max = type["trochee"]
+    if(typ["trochee"] > temp_max):
+        temp_max = typ["trochee"]
         best_fit = "trochaic"
-    if(type["anapest"] > temp_max):
-        temp_max = type["anapest"]
+    if(typ["anapest"] > temp_max):
+        temp_max = typ["anapest"]
         best_fit = "anapestic"
         beat = 3
-    if(type["dactyl"] > temp_max):
-        temp_max = type["dactyl"]
+    if(typ["dactyl"] > temp_max):
+        temp_max = typ["dactyl"]
         best_fit = "dactylic"
         beat = 3
-    if(type["amphibrach"] > temp_max):
-        temp_max = type["amphibrach"]
+    if(typ["amphibrach"] > temp_max):
+        temp_max = typ["amphibrach"]
         best_fit = "amphibrachic"
         beat = 3
 
@@ -326,8 +325,6 @@ def printPoemStress(poem, meter):
     pattern and return a string composed of each line and its
     scansion underneath it '''
     result = []
-    index = 0
-    printmap = []
     # determine scansion type from input
     if meter == "iambic":
         printMap = ["U", "/"]
