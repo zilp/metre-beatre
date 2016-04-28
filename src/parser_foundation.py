@@ -41,3 +41,4 @@ def get_text(url):
     for x in valid_lines:
         print x
     return (title, valid_lines)
+

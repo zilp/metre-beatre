@@ -51,13 +51,13 @@ class myHandler(BaseHTTPRequestHandler):
 
     # get request handler
     def do_GET(self):
-        if self.path=="/":
-            self.path="/server_form.html"
+        if self.path == "/":
+            self.path = "/server_form.html"
 
         try:
             sendReply = False
             if self.path.endswith(".html"):
-                mimetype='text/html'
+                mimetype = 'text/html'
                 sendReply = True
             if sendReply is True:
                 f = open(curdir + sep + self.path)
@@ -74,13 +74,13 @@ class myHandler(BaseHTTPRequestHandler):
     # handles post requests
     def do_POST(self):
         try:
-            if self.path=="/":
+            if self.path == "/":
                 form = cgi.FieldStorage(
                     fp=self.rfile,
                     headers=self.headers,
                     environ={'REQUEST_METHOD': 'POST',
                              'CONTENT_TYPE': self.headers['Content-Type'],
-                            })
+                             })
 
                 print "Poem: %s" % form["poem"].value
                 poem = form["poem"].value
