@@ -113,4 +113,3 @@ def find_rhyme_scheme(poem):
         rhyme_scheme.append(rhyme_pairs[syllable])
 
     return rhyme_scheme
-    print("This poem uses {} distinct rhymes.".format(num_distinct_rhymes))
