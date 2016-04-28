@@ -322,8 +322,8 @@ def analyzeMeter(poem):
 
 
 def printPoemStress(poem, meter):
-    ''' the function will take in a poem and its predicted meter 
-    pattern and return a string composed of each line and its 
+    ''' the function will take in a poem and its predicted meter
+    pattern and return a string composed of each line and its
     scansion underneath it '''
     result = []
     index = 0
