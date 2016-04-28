@@ -114,7 +114,3 @@ def find_rhyme_scheme(poem):
 
     return rhyme_scheme
     print("This poem uses {} distinct rhymes.".format(num_distinct_rhymes))
-
-
-if __name__ == '__main__':
-    find_rhyme_scheme('Longfellow Hiawatha.txt')
