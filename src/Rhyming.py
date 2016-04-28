@@ -74,7 +74,7 @@ def find_rhyme_scheme(poem):
                         final_syllable_list.append(str(sound))
                     else:
                         # need the consonant sound as part of the rhyme
-                        cons = pron[i-1]
+                        cons = pron[i - 1]
                         final_syllable_list.append(str(sound) + str(cons))
                     break
         else:

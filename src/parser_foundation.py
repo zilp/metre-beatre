@@ -10,6 +10,7 @@ import re
 
 LINE = re.compile('[^A-Za-z]')
 
+
 def get_text(url):
     valid_lines = []
     r = requests.get(url)
@@ -47,4 +48,5 @@ def main():
 
 
 if __name__ == "__main__":
-    get_text("http://www.poetryfoundation.org/poems-and-poets/poems/detail/43644")
+    get_text(
+        "http://www.poetryfoundation.org/poems-and-poets/poems/detail/43644")

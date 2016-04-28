@@ -11,6 +11,7 @@ import re
 
 LINE = re.compile('[^A-Za-z]')
 
+
 def get_text(url):
     valid_lines = []
     r = requests.get(url)

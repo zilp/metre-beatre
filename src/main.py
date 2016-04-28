@@ -26,4 +26,4 @@ def main(url):
     rhyme = str(Rhyming.find_rhyme_scheme(poem))
     return '\n' + title + '\n\n' + "METER" + '\n' + result[0] + " " +\
         result[1] + '\n\n' + "RHYME SCHEME" + '\n' + rhyme + '\n\n' +\
-        "SCANSION" + '\n' + SCANSION
+        "SCANSION" + '\n' + scansion
