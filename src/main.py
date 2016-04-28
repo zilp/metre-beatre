@@ -3,9 +3,9 @@ Created on Apr 24, 2016
 
 @author: shilpa
 '''
-from parser_orig import get_text
-import parser_orig
-import parser_alt
+
+import parser_foundation
+import parser_poets
 import analyzeMeter
 import Rhyming
 
@@ -14,11 +14,11 @@ import Rhyming
 def main(url):
     poem = []
     if "poets.org" in url:
-        title = parser_alt.get_text_alt(url)[0]
-        poem = parser_alt.get_text_alt(url)[1]
+        title = parser_poets.get_text(url)[0]
+        poem = parser_poets.get_text(url)[1]
     elif "poetryfoundation" in url:
-        title = parser_orig.get_text(url)[0]
-        poem = parser_orig.get_text(url)[1]
+        title = parser_foundation.get_text(url)[0]
+        poem = parser_foundation.get_text(url)[1]
     else:
         return "Invalid input."
     print poem
