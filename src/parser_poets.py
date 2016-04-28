@@ -11,7 +11,7 @@ import re
 
 LINE = re.compile('[^A-Za-z]')
 
-def get_text_alt(url):
+def get_text(url):
     valid_lines = []
     r = requests.get(url)
     if r.status_code == 404:
@@ -38,7 +38,7 @@ def get_text_alt(url):
 
 
 def main():
-    get_text_alt("https://www.poets.org/poetsorg/poem/epitaph-tyrant")
+    get_text("https://www.poets.org/poetsorg/poem/epitaph-tyrant")
 
 
 if __name__ == "__main__":
